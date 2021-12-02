@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: Recomendación de Siembras
+  description: Esta es la API que realiza recomendaciones personalizadas para invernaderos
+    concretos
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/kamoresc/RecomendarSiembra/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Recomendación siembra
+  description: Operaciones para recomendar cultivos
+paths:
+  /invernadero/{invernid}/recomendaciones:
+    get:
+      tags:
+      - Recomendación siembra
+      summary: Recomienda cultivos para un invernadero concreto
+      description: "By passing in the appropriate options, you can search for\navailable\
+        \ inventory in the system\n"
+      operationId: recomendarPlantas
+      parameters:
+      - name: invernid
+        in: path
+        description: ID del invernadero a recomendar plantas
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Planta'
+      responses:
+        "200":
+          description: Resultados para el invernadero concreo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Planta'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-swagger-router-controller: RecomendacinSiembra
+  /invernadero/{invernid}/recomendaciones/{planta}:
+    get:
+      tags:
+      - Recomendación siembra
+      summary: Analiza una planta en concreto para un invernadero
+      description: "By passing in the appropriate options, you can search for\navailable\
+        \ inventory in the system\n"
+      operationId: recomendarPlantaConcreta
+      parameters:
+      - name: invernid
+        in: path
+        description: ID del invernadero a recomendar plantas
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: planta
+        in: path
+        description: Nombre de la planta a comprobar si es recomendable
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisPlanta'
+        "400":
+          description: bad input parameter
+      x-swagger-router-controller: RecomendacinSiembra
+components:
+  schemas:
+    Planta:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Tomate
+      example:
+        name: Tomate
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+    AnalisisPlanta:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        planta:
+          $ref: '#/components/schemas/Planta'
+      example:
+        planta:
+          name: Tomate
+          id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
